@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  order.api:
+    build:
+      context: "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind"
+      dockerfile: "Order/src/Order.API/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Order.API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "orderapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind\\Order\\\
+      src\\Order.API:/app:rw"
+    - "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind:/src:rw"
+    - "C:\\Users\\tung.le\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
