@@ -2,7 +2,7 @@
 services:
   order.api:
     build:
-      context: "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind"
+      context: "/Users/tungle/Data Local/OpenAPI"
       dockerfile: "Order/src/Order.API/Dockerfile"
       target: "base"
     command: []
@@ -14,8 +14,7 @@ services:
     image: "orderapi:dev"
     ports: []
     volumes:
-    - "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind\\Order\\\
-      src\\Order.API:/app:rw"
-    - "C:\\Users\\tung.le\\Documents\\EducationPerfect\\src\\TEST\\OpenMind:/src:rw"
-    - "C:\\Users\\tung.le\\.nuget\\packages:/home/app/.nuget/packages"
+    - "/Users/tungle/Data Local/OpenAPI/Order/src/Order.API:/app:rw"
+    - "/Users/tungle/Data Local/OpenAPI:/src:rw"
+    - "/Users/tungle/.nuget/packages:/home/app/.nuget/packages"
     working_dir: "/app"

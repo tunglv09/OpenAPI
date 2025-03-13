@@ -3,10 +3,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      # Remove this to fix SSL issue on MAC OS
+      #- ASPNETCORE_HTTPS_PORTS=8081
     ports:
       - "8080:8080"
       - "8081:8081"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ~/Library/Application Support/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      #- ~/Library/Application Support/ASP.NET/Https:/home/app/.aspnet/https:ro
+      # Use the following on Windows
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

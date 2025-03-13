@@ -12,5 +12,8 @@ scrape_configs:
     honor_timestamps: false
     scrape_interval: 5s
     static_configs:
-      - targets: ['otel-collector:8889']
-      - targets: ['otel-collector:8888']
+      - targets: ['host.docker.internal:8889']
+      - targets: ['host.docker.internal:8888']
+      # Windows may work
+      #- targets: [ 'otel-collector:8889' ]
+      #- targets: [ 'otel-collector:8888' ]

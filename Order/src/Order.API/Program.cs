@@ -22,7 +22,6 @@ builder.Services.AddDbContext<ToDoItemDbContext>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-// add prometheus exporter
 builder.Services.AddOpenTelemetry()
     .WithMetrics(opt =>
     {

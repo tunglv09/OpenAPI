@@ -15,12 +15,13 @@ services:
       context: .
       dockerfile: Order/src/Order.API/Dockerfile
     environment:
-      Otel__Endpoint: http://otel-collector:4317
+      Otel__Endpoint: http://host.docker.internal:4317
     depends_on:
       - otel-collector
+    entrypoint: ["sh", "-c", "dotnet dev-certs https --trust && dotnet Order.API.dll"]
 
   otel-collector:
-    image: otel/opentelemetry-collector:latest
+    image: otel/opentelemetry-collector:0.95.0
     command: [ "--config=/etc/otel-collector-config.yml" ]
     volumes:
       - ./config/otel-collector-config.yml:/etc/otel-collector-config.yml
