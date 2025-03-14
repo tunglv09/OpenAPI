@@ -1,22 +1,16 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Serialization;
+using Order.API.Configuration;
 using Order.API.Repositories;
-using Order.API.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
-builder.Services.AddScoped<IToDoItemValidator, ToDoItemValidator>();
-builder.Services.AddScoped<IToDoItemService, ToDoItemService>();
+var appName = builder.Configuration.GetValue<string>("APPLICATION_NAME");
+var svcName = builder.Configuration.GetValue<string>("SERVICE_NAME");
 
 builder.Services.AddDbContext<ToDoItemDbContext>();
 
@@ -25,22 +19,18 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddOpenTelemetry()
     .WithMetrics(opt =>
     {
-
-        var meterName = builder.Configuration.GetValue<string>("MeterName")
-                        ?? throw new InvalidOperationException("Unable to locate Otel meter name.");
-
-        var otelEndpoint = builder.Configuration["Otel:Endpoint"]
-                           ?? throw new InvalidOperationException("Otel endpoint was not configured.");
+        var meterName = builder.Configuration.GetValue<string>("MeterName");
+        var otelEndpoint = builder.Configuration["Otel:Endpoint"];
 
         opt
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenRemoteManage.GatewayAPI"))
-            .AddMeter(meterName)
+            .AddMeter(meterName ?? "")
             .AddAspNetCoreInstrumentation()
             .AddRuntimeInstrumentation()
             .AddProcessInstrumentation()
             .AddOtlpExporter(opts =>
             {
-                opts.Endpoint = new Uri(otelEndpoint);
+                opts.Endpoint = new Uri(otelEndpoint ?? "");
             });
     });
 
@@ -60,6 +50,10 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddCustomLogging(builder.Configuration, builder.Host, svcName, appName);
+
+builder.Services.AddApplicationServices();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -68,18 +62,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OPEN API"); // http://localhost:5000/swagger
+        // Base on applicationUrl from launchSettings. http://localhost:5000/swagger
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OPEN API");
         c.DocumentTitle = "WEB API";
         c.DocExpansion(DocExpansion.List);
     });
 }
 
+app.UseSerilogRequestLogging(opt =>
+{
+    opt.IncludeQueryInRequestPath = true;
+}); 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
