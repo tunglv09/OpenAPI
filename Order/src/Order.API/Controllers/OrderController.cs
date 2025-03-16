@@ -10,6 +10,7 @@ public class OrderController(ILogger<OrderController> logger) : ControllerBase
     [Route("GetAll")]
     public Task<IActionResult> GetAll()
     {
+        logger.LogInformation("Start getting all orders.");
         var order1 = new Models.Order
         {
             Id = 1,
@@ -23,9 +24,7 @@ public class OrderController(ILogger<OrderController> logger) : ControllerBase
         };
 
         var list = new List<Models.Order> { order1, order2 };
-            
-        logger.LogInformation("GetAll Orders");
-
+        
         return Task.FromResult<IActionResult>(Ok(list));
     }
 }
