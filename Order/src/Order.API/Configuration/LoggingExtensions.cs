@@ -21,8 +21,6 @@ public static class LoggingExtensions
                     logEvent.Properties.TryGetValue("RequestPath", out var requestPath) && requestPath.ToString().Contains("/health") &&
                     logEvent.Properties.TryGetValue("StatusCode", out var statusCode) && statusCode.ToString() == "200")
                 .ReadFrom.Configuration(configuration)
-                .WriteTo.Console()
-                .WriteTo.Http("http://fluentbit:24224", queueLimitBytes: 1_000_000)
                 .CreateLogger();
     
         hostBuilder.UseSerilog(Log.Logger);

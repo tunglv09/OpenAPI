@@ -16,6 +16,7 @@
   <ItemGroup>
     <Content Include="config\fluentbit.conf" />
     <Content Include="config\otel-collector-config.yml" />
+    <Content Include="config\parsers.conf" />
     <Content Include="config\prometheus.yml" />
   </ItemGroup>
 </Project>
