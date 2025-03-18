@@ -11,6 +11,7 @@ public class OrderController(ILogger<OrderController> logger) : ControllerBase
     public Task<IActionResult> GetAll()
     {
         logger.LogInformation("Start getting all orders.");
+        
         var order1 = new Models.Order
         {
             Id = 1,

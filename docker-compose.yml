@@ -79,6 +79,7 @@ services:
       - ./config/fluentbit.conf:/fluent-bit/etc/fluentbit.conf
     ports:
       - "24224:24224"
+      - "9201:9201"
     networks:
       - monitoring
 
